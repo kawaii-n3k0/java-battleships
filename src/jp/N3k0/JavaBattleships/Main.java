@@ -12,7 +12,7 @@ public class Main {
 
     private static final JFrame frame = new JFrame("Battleships") {
         {
-            setSize(337, 360);
+            setSize(335, 359);
             setVisible(true);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setResizable(false);

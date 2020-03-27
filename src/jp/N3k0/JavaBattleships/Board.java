@@ -121,19 +121,18 @@ public final class Board extends Canvas {
                 }
             }
         }
+
+        // draw the null tile
+        Image null_tile = getToolkit().getImage("img/tile_null.png");
+        g.drawImage(null_tile, 0, 0, size, size, this);
+
         for (int i = 0; i < 11;i++) {
-            g.setColor(Color.lightGray);
-            g.fillRect(i * size, 0, size, size);
-            g.setColor(Color.black);
-            g.drawRect(i * size, 0, size, size);
-            g.drawString(coords(i), i * 30 + 10, 20);
+            Image tile_number = getToolkit().getImage("img/tile_" + coords(i) + ".png");
+            g.drawImage(tile_number, i * size, 0, size, size, this);
         }
         for (int j = 0; j < 11;j++) {
-            g.setColor(Color.lightGray);
-            g.fillRect(0, j * size, size, size);
-            g.setColor(Color.black);
-            g.drawRect(0, j * size, size, size);
-            g.drawString(Integer.toString(j).equals("0") ? "" : Integer.toString(j), 10, j * 30 + 20);
+            Image tile_letter = getToolkit().getImage("img/tile_" + (Integer.toString(j).equals("0") ? "" : Integer.toString(j)) + ".png");
+            g.drawImage(tile_letter, 0, j * size, size, size, this);
         }
     }
 }

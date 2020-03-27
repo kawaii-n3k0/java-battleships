@@ -2,6 +2,8 @@ package jp.N3k0.JavaBattleships.tiles;
 
 import jp.N3k0.JavaBattleships.ship.Ship;
 
+import java.awt.*;
+
 /**
  * @project Java_Battleships
  * @copyright N3k0 (c) 2020
