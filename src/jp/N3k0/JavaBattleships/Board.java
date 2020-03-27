@@ -3,7 +3,11 @@ package jp.N3k0.JavaBattleships;
 import jp.N3k0.JavaBattleships.help.Console;
 import jp.N3k0.JavaBattleships.ship.Ship;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -13,6 +17,9 @@ import java.util.Arrays;
  * <b>File inside package: jp.N3k0.JavaBattleships</b>
  */
 public final class Board extends Canvas {
+
+    private Image water_empty;
+
     private boolean[][] board = new boolean[10][10];
     private boolean bb = false, ca = false, dd = false, ss, cv;
 
@@ -22,6 +29,7 @@ public final class Board extends Canvas {
 
     private void init() {
         for (int i = 0; i < board.length; i++) for (int j = 0; j < board[i].length; j++) board[i][j] = false;
+        this.water_empty = getToolkit().getImage("img/water_empty.png");
     }
 
     public final void print(boolean prettify) {
@@ -102,12 +110,15 @@ public final class Board extends Canvas {
         int size = 30;
         for (int x = 1; x < board.length + 1; x++) {
             for (int y = 1; y < board[x - 1].length + 1; y++) {
-                if (board[x - 1][y - 1])
+                if (board[x - 1][y - 1]) {
                     g.setColor(Color.red);
-                else g.setColor(Color.cyan);
-                g.fillRect(y * size, x * size, size, size);
-                g.setColor(Color.black);
-                g.drawRect(y * size, x * size, size, size);
+                    g.fillRect(y * size, x * size, size, size);
+                    g.setColor(Color.black);
+                    g.drawRect(y * size, x * size, size, size);
+                }
+                else {
+                    g.drawImage(this.water_empty, x * size, y * size, size, size, this);
+                }
             }
         }
         for (int i = 0; i < 11;i++) {
