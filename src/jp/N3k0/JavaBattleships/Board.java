@@ -3,11 +3,7 @@ package jp.N3k0.JavaBattleships;
 import jp.N3k0.JavaBattleships.help.Console;
 import jp.N3k0.JavaBattleships.ship.Ship;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -29,7 +25,7 @@ public final class Board extends Canvas {
 
     private void init() {
         for (int i = 0; i < board.length; i++) for (int j = 0; j < board[i].length; j++) board[i][j] = false;
-        this.water_empty = getToolkit().getImage("img/water_empty.png");
+        this.water_empty = getToolkit().getImage("img/tile_water_0.png");
     }
 
     public final void print(boolean prettify) {
@@ -111,10 +107,8 @@ public final class Board extends Canvas {
         for (int x = 1; x < board.length + 1; x++) {
             for (int y = 1; y < board[x - 1].length + 1; y++) {
                 if (board[x - 1][y - 1]) {
-                    g.setColor(Color.red);
-                    g.fillRect(y * size, x * size, size, size);
-                    g.setColor(Color.black);
-                    g.drawRect(y * size, x * size, size, size);
+                    Image ship_tile = getToolkit().getImage("img/tile_ship_0.png");
+                    g.drawImage(ship_tile, x * size, y * size, size, size, this);
                 }
                 else {
                     g.drawImage(this.water_empty, x * size, y * size, size, size, this);
@@ -124,6 +118,7 @@ public final class Board extends Canvas {
 
         // draw the null tile
         Image null_tile = getToolkit().getImage("img/tile_null.png");
+
         g.drawImage(null_tile, 0, 0, size, size, this);
 
         for (int i = 0; i < 11;i++) {

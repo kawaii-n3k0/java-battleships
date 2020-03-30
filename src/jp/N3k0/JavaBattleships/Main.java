@@ -1,5 +1,7 @@
 package jp.N3k0.JavaBattleships;
 
+import jp.N3k0.JavaBattleships.help.Selector;
+
 import javax.swing.*;
 
 /**
@@ -21,8 +23,13 @@ public class Main {
     };
 
     public static void main(String[] args) {
+
         Board board = new Board();
 
         frame.getContentPane().add(board);
+
+        Selector selector = new Selector();
+
+        selector.showUI();
     }
 }

@@ -8,7 +8,7 @@ package jp.N3k0.JavaBattleships.tiles;
  */
 public class WaterTile extends Tile {
     public WaterTile() {
-        super("img/water_empty.png");
+        super("");
     }
 
     @Override

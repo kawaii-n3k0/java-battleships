@@ -10,7 +10,7 @@ public abstract class Ship {
 
     private int length, orientation, ship;
 
-    Ship(Type type, Orientation orientation) {
+    protected Ship(Type type, Orientation orientation) {
 
         this.orientation = orientation.orientation ? 1 : 0;
 
