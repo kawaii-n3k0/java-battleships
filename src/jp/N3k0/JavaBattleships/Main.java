@@ -27,9 +27,5 @@ public class Main {
         Board board = new Board();
 
         frame.getContentPane().add(board);
-
-        Selector selector = new Selector();
-
-        selector.showUI();
     }
 }

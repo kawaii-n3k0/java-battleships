@@ -9,8 +9,10 @@ package jp.N3k0.JavaBattleships.ship;
 public abstract class Ship {
 
     private int length, orientation, ship;
+    private short hp;
+    private boolean[] hit;
 
-    protected Ship(Type type, Orientation orientation) {
+    Ship(Type type, Orientation orientation) {
 
         this.orientation = orientation.orientation ? 1 : 0;
 
@@ -23,10 +25,20 @@ public abstract class Ship {
             case AIRCRAFT_CARRIER: this.length = 5; break;
             default: throw new IllegalArgumentException("Illegal value given as jp.Nk30.JavaBattleships.ship.Ship.Type");
         }
+
+        this.hp = (short)this.length;
+
+        this.hit = new boolean[this.length];
+        for (int i = 0; i < this.length; i++) this.hit[i] = false;
     }
 
     public int getLength() {
         return length;
+    }
+
+    public void hit(int index) {
+        this.hp--;
+        this.hit[index] = true;
     }
 
     public int getOrientation() {

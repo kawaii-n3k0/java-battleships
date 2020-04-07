@@ -17,7 +17,7 @@ public final class Board extends Canvas {
     private Image water_empty;
 
     private boolean[][] board = new boolean[10][10];
-    private boolean bb = false, ca = false, dd = false, ss, cv;
+    private boolean bb = false, ca = false, dd = false, ss = false, cv = false;
 
     public Board() {
         init();
@@ -38,6 +38,24 @@ public final class Board extends Canvas {
     }
 
     public final void place(Ship ship, int x, int y) {
+
+        int type = this.checkShip(ship);
+
+        switch (type) {
+            case 0: bb = true; break;
+            case 1: ca = true; break;
+            case 2: dd = true; break;
+            case 3: ss = true; break;
+            case 4: cv = true; break;
+            case -1: default: throw new IllegalArgumentException(String.format("Value is out of range: 0 | 4; value given is %s", type));
+        }
+
+        if (bb && ship.getShip() == Ship.Type.BATTLESHIP.getType()) return;
+        else if(ca && ship.getShip() == Ship.Type.HEAVY_CRUISER.getType()) return;
+        else if (dd && ship.getShip() == Ship.Type.DESTROYER.getType()) return;
+        else if (ss && ship.getShip() == Ship.Type.SUBMARINE.getType()) return;
+        else if (cv && ship.getShip() == Ship.Type.AIRCRAFT_CARRIER.getType()) return;
+
         boolean clear = true;
         int cleared = 0;
         if (ship.getOrientation() == 0) {
@@ -58,10 +76,18 @@ public final class Board extends Canvas {
         }
 
         if (clear) {
-            if (ship.getOrientation() == 1) placeVertical(ship, x, y);
-            else placeHorizontal(ship, x, y);
+            if (ship.getOrientation() == 1) this.placeVertical(ship, x, y);
+            else this.placeHorizontal(ship, x, y);
         }
         else Console.warn("Cannot place ship.");
+    }
+
+    // ========================================================================================================
+
+    private int checkShip(Ship ship) {
+        int type = ship.getShip();
+
+        return type == 0xBB ? 0 : type == 0xCA ? 1 : type == 0xDD ? 2 : type == 0xEE ? 3 : type == 0xFF ? 4 : -1;
     }
 
     // ========================================================================================================
@@ -122,7 +148,7 @@ public final class Board extends Canvas {
         g.drawImage(null_tile, 0, 0, size, size, this);
 
         for (int i = 0; i < 11;i++) {
-            Image tile_number = getToolkit().getImage("img/tile_" + coords(i) + ".png");
+            Image tile_number = getToolkit().getImage("img/tile_" + this.coords(i) + ".png");
             g.drawImage(tile_number, i * size, 0, size, size, this);
         }
         for (int j = 0; j < 11;j++) {
