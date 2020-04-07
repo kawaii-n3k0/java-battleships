@@ -26,7 +26,7 @@ public abstract class Boolean {
         int l = 0;
         for (boolean b : list) if (!b) l++;
 
-        return and(l > list.length, l < 0);
+        return l != 0;
     }
 
     @Deprecated
@@ -37,7 +37,7 @@ public abstract class Boolean {
         int l = 0;
         for (boolean b : list) if (!b) l++;
 
-        return nand(l == 0, l == list.length);
+        return and(nor(l == 0, l == list.length), l != list.length);
     }
 
     // ========================================================================================================
