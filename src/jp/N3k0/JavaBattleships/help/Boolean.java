@@ -33,7 +33,7 @@ public abstract class Boolean {
     public static boolean xor(boolean a, boolean b) {
         return a ^ b;
     }
-    public static boolean xor(boolean[] list) {
+    public static boolean xor(boolean...list) {
         int l = 0;
         for (boolean b : list) if (!b) l++;
 
