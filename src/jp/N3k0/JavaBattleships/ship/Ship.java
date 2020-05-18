@@ -1,5 +1,8 @@
 package jp.N3k0.JavaBattleships.ship;
 
+import jp.N3k0.JavaBattleships.help.Arrays;
+import jp.N3k0.JavaBattleships.help.Boolean;
+
 /**
  * @project Java_Battleships
  * @copyright N3k0 (c) 2020
@@ -11,6 +14,7 @@ public abstract class Ship {
     private int length, orientation, ship;
     private short hp;
     private boolean[] hit;
+    private boolean sunk = false;
 
     Ship(Type type, Orientation orientation) {
 
@@ -32,13 +36,17 @@ public abstract class Ship {
         for (int i = 0; i < this.length; i++) this.hit[i] = false;
     }
 
-    public int getLength() {
-        return length;
-    }
-
     public void hit(int index) {
         this.hp--;
         this.hit[index] = true;
+    }
+
+    public final void sink() {
+        if (!this.sunk) this.sunk = Boolean.and(this.hp == 0, Arrays.is(hit, true));
+    }
+
+    public final boolean isSunk() {
+        return this.sunk;
     }
 
     public int getOrientation() {
@@ -47,6 +55,18 @@ public abstract class Ship {
 
     public int getShip() {
         return ship;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public short getHp() {
+        return hp;
+    }
+
+    public boolean[] getHit() {
+        return this.hit;
     }
 
     // ========================================================================================================

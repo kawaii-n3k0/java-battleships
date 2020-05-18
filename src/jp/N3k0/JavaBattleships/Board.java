@@ -16,7 +16,7 @@ public final class Board extends Canvas {
 
     private Image water_empty;
 
-    private boolean[][] board = new boolean[10][10];
+    private int[][] board = new int[10][10];
     private boolean bb = false, ca = false, dd = false, ss = false, cv = false;
 
     public Board() {
@@ -24,13 +24,13 @@ public final class Board extends Canvas {
     }
 
     private void init() {
-        for (int i = 0; i < board.length; i++) for (int j = 0; j < board[i].length; j++) board[i][j] = false;
+        for (int i = 0; i < board.length; i++) for (int j = 0; j < board[i].length; j++) board[i][j] = 0;
         this.water_empty = getToolkit().getImage("img/tile_water_0.png");
     }
 
     public final void print(boolean prettify) {
         String map = prettify ? "" : "[";
-        for (boolean[] row : board) {
+        for (int[] row : board) {
             map += prettify ? String.format("%s\n", Arrays.toString(row)) : String.format("%s,", Arrays.toString(row));
         }
 
@@ -39,7 +39,11 @@ public final class Board extends Canvas {
 
     public final void place(Ship ship, int x, int y) {
 
+        Console.log("Placing ship in position: " + String.format("%s, %s", x, y));
+
         int type = this.checkShip(ship);
+
+        Console.log("Type: " + type);
 
         switch (type) {
             case 0: bb = true; break;
@@ -50,32 +54,37 @@ public final class Board extends Canvas {
             case -1: default: throw new IllegalArgumentException(String.format("Value is out of range: 0 | 4; value given is %s", type));
         }
 
-        if (bb && ship.getShip() == Ship.Type.BATTLESHIP.getType()) return;
-        else if(ca && ship.getShip() == Ship.Type.HEAVY_CRUISER.getType()) return;
-        else if (dd && ship.getShip() == Ship.Type.DESTROYER.getType()) return;
-        else if (ss && ship.getShip() == Ship.Type.SUBMARINE.getType()) return;
-        else if (cv && ship.getShip() == Ship.Type.AIRCRAFT_CARRIER.getType()) return;
+        if (!bb && ship.getShip() == Ship.Type.BATTLESHIP.getType()) return;
+        else if(!ca && ship.getShip() == Ship.Type.HEAVY_CRUISER.getType()) return;
+        else if (!dd && ship.getShip() == Ship.Type.DESTROYER.getType()) return;
+        else if (!ss && ship.getShip() == Ship.Type.SUBMARINE.getType()) return;
+        else if (!cv && ship.getShip() == Ship.Type.AIRCRAFT_CARRIER.getType()) return;
 
         boolean clear = true;
         int cleared = 0;
         if (ship.getOrientation() == 0) {
-            if (ship.getLength() + y < 10) {
+            Console.log("Placing ship horizontally");
+            if (ship.getLength() + y <= 10) {
                 for (int j = 0;j < ship.getLength();j++) {
-                    if (board[x][j + y]) { cleared++; clear = cleared == 0; }
+                    if (board[x][j + y] == 1) { cleared++; clear = cleared == 0; }
                 }
             }
             else clear = false;
         }
         else {
-            if (ship.getLength() + x < 10) {
+            Console.log("Placing ship vertically");
+            if (ship.getLength() + x <= 10) {
                 for (int i = 0;i < ship.getLength();i++) {
-                    if (board[i + x][y]) { cleared++; clear = cleared == 0; }
+                    if (board[i + x][y] == 1) { cleared++; clear = cleared == 0; }
                 }
             }
             else clear = false;
         }
 
+        Console.log("Cleared: " + clear);
+
         if (clear) {
+            Console.log("Placing ship");
             if (ship.getOrientation() == 1) this.placeVertical(ship, x, y);
             else this.placeHorizontal(ship, x, y);
         }
@@ -87,20 +96,22 @@ public final class Board extends Canvas {
     private int checkShip(Ship ship) {
         int type = ship.getShip();
 
+        Console.log("Checking for the ship of type: " + type);
+
         return type == 0xBB ? 0 : type == 0xCA ? 1 : type == 0xDD ? 2 : type == 0xEE ? 3 : type == 0xFF ? 4 : -1;
     }
 
     // ========================================================================================================
 
     private void placeHorizontal(Ship ship, int x, int y) {
-        if (ship.getLength() + y < 10) {
-            for(int j = 0; j < ship.getLength(); j++) board[x][j + y] = true;
+        if (ship.getLength() + y <= 10) {
+            for(int j = 0; j < ship.getLength(); j++) board[x][j + y] = ship.isSunk() ? 3 : ship.getHit()[j] ? 2 : 1;
         }
     }
 
     private void placeVertical(Ship ship, int x, int y) {
-        if (ship.getLength() + x < 10) {
-            for (int i = 0; i < ship.getLength(); i++) board[i + x][y] = true;
+        if (ship.getLength() + x <= 10) {
+            for (int i = 0; i < ship.getLength(); i++) board[i + x][y] = ship.isSunk() ? 3 : ship.getHit()[i] ? 2 : 1;
         }
     }
 
@@ -129,11 +140,20 @@ public final class Board extends Canvas {
 
     @Override
     public void paint(Graphics g) {
+        Console.log("Drawing...");
         int size = 30;
-        for (int x = 1; x < board.length + 1; x++) {
-            for (int y = 1; y < board[x - 1].length + 1; y++) {
-                if (board[x - 1][y - 1]) {
+        for (int y = 1; y < board.length + 1; y++) {
+            for (int x = 1; x < board[y - 1].length + 1; x++) {
+                if (board[y - 1][x - 1] == 1) {
                     Image ship_tile = getToolkit().getImage("img/tile_ship_0.png");
+                    g.drawImage(ship_tile, x * size, y * size, size, size, this);
+                }
+                else if (board[y - 1][x - 1] == 2) {
+                    Image ship_tile = getToolkit().getImage("img/tile_ship_1.png");
+                    g.drawImage(ship_tile, x * size, y * size, size, size, this);
+                }
+                else if (board[y - 1][x - 1] == 3) {
+                    Image ship_tile = getToolkit().getImage("img/tile_ship_2.png");
                     g.drawImage(ship_tile, x * size, y * size, size, size, this);
                 }
                 else {

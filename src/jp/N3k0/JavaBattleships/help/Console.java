@@ -10,10 +10,18 @@ import java.util.Date;
  */
 public abstract class Console {
     public static void warn(String message) {
+        String temp = format("WARN");
+        System.out.printf("%s%s%n", temp, message);
+    }
 
+    public static void log(String message) {
+        String temp = format("LOG");
+        System.out.printf("%s%s%n", temp, message);
+    }
+
+    private static String format(String prefix) {
         final Date d = new Date();
 
-        String temp = String.format("[%s:%s:%s]:", d.getHours(), d.getMinutes(), d.getSeconds());
-        System.out.printf("%s%s", temp, message);
+        return String.format("[%s@%s:%s:%s]:", prefix, d.getHours(), d.getMinutes(), d.getSeconds());
     }
 }
